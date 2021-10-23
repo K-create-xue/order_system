@@ -1,4 +1,4 @@
-  /*************************************************************************                                                                                                                                                                                                                                                                                                                                                                                                                 
+  /*************************************************************************                                                                                                                                                                                                    
       > File Name: main.cpp
       > Author: Black_K
       > Mail: xzp01@foxmail.com 
@@ -7,7 +7,7 @@
   //#include<regex>
   #include"db.hpp"
   #include"httplib.h"
-  
+  #include <regex>
   
   
   #define WWWROOT "./wwwroot"
@@ -74,7 +74,7 @@
           return ;
       }
       dish["id"]=dish_id;
-      ret=tb_dish->Update(dish_id);
+      ret=tb_dish->Update(dish);
       if(ret==false){
           std::cout<<"mysql update dish error!"<<std::endl;
           rsp.status=500;
@@ -102,7 +102,7 @@ W>void DishGetAll(const Request &req,Response &rsp){
       Json::Value dish;
       bool ret=tb_dish->SelectOne(dish_id,&dish);
      if(ret==false){
-      std::cout<<"mysql getOne dish error!"<<std::endl;
+          std::cout<<"mysql getOne dish error!"<<std::endl;
           rsp.status=500;
           return ;
      }
@@ -115,7 +115,7 @@ W>void DishGetAll(const Request &req,Response &rsp){
   void OrderInsert(const Request &req,Response &rsp){
       Json::Value order;
       Json::Reader reader;
-      bool ret=reader.parse(req.body,order);
+      bool ret=reader.parse(req.body,order);                                                                                                                                                                                                                                    
       if(ret==false){
           std::cout<<"insert parse order info  error!"<<std::endl;
           rsp.status=400;
@@ -177,13 +177,13 @@ W>void OrderGetAll(const Request &req,Response &rsp){
   
   void OrderGetOne(const Request &req,Response &rsp){
       int order_id=std::stoi(req.matches[1]);
-      Json::Value order;
+      Json::Value order;                                                                                                                                                                                                                                                        
       bool ret=tb_order->SelectOne(order_id,&order);
       if(ret==false){
           std::cout<<"mysql getone order  error!"<<std::endl;
           rsp.status=500;
           return ;
-      }
+  }
       Json::FastWriter writer;
       rsp.body=writer.write(order);
       return ;
@@ -201,11 +201,12 @@ W>void OrderGetAll(const Request &req,Response &rsp){
       //正则表达式：()表示捕捉匹配括号中规则的文本
       //R"()" 表示括号中的字符串去除特殊字符的特殊含义
       server.Post("/dish",DishInsert);
-      server.Delete(R"(/dish/(\d+))",DishDelete);                                                                                                                                                                                                                                                                                                                                                                                                                                            
+      server.Delete(R"(/dish/(\d+))",DishDelete);
       server.Put(R"(/dish/(\d+))",DishUpdate);
       server.Get(R"(/dish)",DishGetAll);
-      server.Get(R"(/dish/(\d+)",DishGetOne);
- server.Post(R"(/order)",OrderInsert);
+      server.Get(R"(/dish/(\d+))",DishGetOne);
+      
+      server.Post("/order",OrderInsert);
       server.Delete(R"(/order/(\d+))",OrderDelete);
       server.Put(R"(/order/(\d+))",OrderUpdate);
       server.Get(R"(/order)",OrderGetAll);
@@ -237,11 +238,10 @@ W>void OrderGetAll(const Request &req,Response &rsp){
       Json::StyledWriter writer;
       //dish.SelectAll(&val);
       dish.SelectOne(2,&val);
-      std::cout<<writer.write(val)<<std::endl;
-      
+      std::cout<<writer.write(val)<<std::endl;                                                                                                                                                                                                                                                                               
       }
-  
-  void order_test(){
+
+      void order_test(){
       order_sys::TableOrder order;
       
       //增删改
@@ -262,4 +262,5 @@ W>void OrderGetAll(const Request &req,Response &rsp){
       //order.SelectAll(&val);
       order.SelectOne(1,&val);
       std::cout<<writer.write(val)<<std::endl;
-    }
+  }                                      
+     
